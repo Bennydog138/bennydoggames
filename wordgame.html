@@ -3,176 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Word Guessing Game</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <title>Word Game – Bennydog Games</title>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to right, #fc466b, #3f5efb);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px;
+      background: linear-gradient(to right, #11998e, #38ef7d);
+      color: #fff;
+      text-align: center;
+      padding: 30px;
     }
 
     h1 {
-      margin-bottom: 20px;
       font-size: 2.5rem;
+      margin-bottom: 20px;
     }
 
-    .game-container {
-      text-align: center;
-      max-width: 600px;
-      width: 100%;
+    #game-area {
+      margin-top: 30px;
     }
 
-    .input-section {
-      margin: 20px 0;
-    }
-
-    input, select, button {
-      padding: 10px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      margin: 10px 5px;
-    }
-
-    button {
-      background-color: #ffc107;
-      color: black;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #ffdd4a;
-    }
-
-    .feedback {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      line-height: 1.6;
-    }
-
-    .correct {
-      color: #00ff88;
-      font-weight: bold;
+    .guess-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 10px 0;
     }
 
     .letter-box {
-      display: inline-block;
-      width: 32px;
-      height: 40px;
-      line-height: 40px;
-      border: 2px solid white;
-      margin: 3px;
-      border-radius: 6px;
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff22;
+    }
+
+    .correct {
+      background-color: #4caf50; /* Green */
+    }
+
+    .wrong-place {
+      background-color: #ff9800; /* Orange */
+    }
+
+    .wrong {
+      background-color: #444; /* Grey */
+    }
+
+    input[type="text"] {
+      padding: 10px;
       font-size: 1.2rem;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      margin-right: 10px;
+      width: 150px;
+      text-transform: uppercase;
     }
 
-    .green {
-      background-color: #28a745;
-      color: white;
+    button {
+      padding: 10px 20px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #ffd700;
+      color: #000;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
-    .gray {
-      background-color: #555;
-      color: white;
+    button:hover {
+      background-color: #fff176;
     }
 
     footer {
       margin-top: 60px;
       font-size: 0.9rem;
-      text-align: center;
     }
 
     a {
-      color: #00e5ff;
+      color: #fff;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-  <h1>🔤 Word Guessing Game</h1>
-  <div class="game-container">
-    <div class="input-section" id="setup-section">
-      <label for="length">How many letters should the word be?</label><br/>
-      <select id="wordLength">
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5" selected>5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-      </select>
-      <button onclick="startGame()">Start Game</button>
-    </div>
+  <h1>🔤 Word Guess Game</h1>
+  <p>Guess the hidden 5-letter word. After each guess, you'll get feedback:</p>
+  <ul style="text-align: left; max-width: 500px; margin: 0 auto;">
+    <li>🟩 Green = correct letter & position</li>
+    <li>🟨 Orange = letter is in the word but wrong position</li>
+    <li>⬛ Gray = letter is not in the word</li>
+  </ul>
 
-    <div class="input-section" id="game-section" style="display:none;">
-      <input type="text" id="guessInput" placeholder="Enter your guess" maxlength="10" />
-      <button onclick="checkGuess()">Submit</button>
-      <div class="feedback" id="feedback"></div>
-    </div>
+  <div style="margin-top: 20px;">
+    <input type="text" id="guess-input" maxlength="5" placeholder="Enter a word" />
+    <button onclick="submitGuess()">Guess</button>
   </div>
 
+  <div id="game-area"></div>
+
   <footer>
-    © Bennydog2021<br />
-    Join our Discord for more info: <a href="https://discord.gg/8qd6PNC5An" target="_blank">https://discord.gg/8qd6PNC5An</a>
+    <p>© Bennydog2021<br>
+    Join our Discord for more info: <a href="https://discord.gg/8qd6PNC5An" target="_blank">discord.gg/8qd6PNC5An</a></p>
   </footer>
 
   <script>
-    let dictionary = [];
-    let chosenWord = '';
-    let wordLength = 5;
+    const words = ["apple", "crazy", "drain", "froze", "glory", "plant", "trust", "world", "train", "slide", "brick", "flame", "bread", "swirl", "grape"];
+    const word = words[Math.floor(Math.random() * words.length)].toUpperCase();
+    console.log("🔐 Secret word:", word); // For testing
 
-    async function loadWords() {
-      const res = await fetch('words.txt');
-      const text = await res.text();
-      dictionary = text.split('\n').map(w => w.trim().toLowerCase()).filter(w => w.length >= 3);
-    }
+    function submitGuess() {
+      const input = document.getElementById("guess-input");
+      const guess = input.value.toUpperCase();
 
-    async function startGame() {
-      if (dictionary.length === 0) await loadWords();
-      wordLength = parseInt(document.getElementById('wordLength').value);
-
-      const validWords = dictionary.filter(word => word.length === wordLength);
-      chosenWord = validWords[Math.floor(Math.random() * validWords.length)];
-
-      document.getElementById('setup-section').style.display = 'none';
-      document.getElementById('game-section').style.display = 'block';
-      document.getElementById('feedback').innerHTML = '';
-    }
-
-    function checkGuess() {
-      const guess = document.getElementById('guessInput').value.toLowerCase();
-      if (guess.length !== chosenWord.length) {
-        alert(`Please enter a ${chosenWord.length}-letter word.`);
+      if (guess.length !== 5) {
+        alert("Please enter a 5-letter word.");
         return;
       }
 
-      let resultHTML = '';
-      for (let i = 0; i < guess.length; i++) {
-        const letter = guess[i];
-        if (letter === chosenWord[i]) {
-          resultHTML += `<span class="letter-box green">${letter.toUpperCase()}</span>`;
-        } else {
-          resultHTML += `<span class="letter-box gray">${letter.toUpperCase()}</span>`;
+      const row = document.createElement("div");
+      row.className = "guess-row";
+
+      const letterCount = {};
+      for (const letter of word) {
+        letterCount[letter] = (letterCount[letter] || 0) + 1;
+      }
+
+      const status = Array(5).fill("wrong");
+
+      // First pass: correct positions
+      for (let i = 0; i < 5; i++) {
+        if (guess[i] === word[i]) {
+          status[i] = "correct";
+          letterCount[guess[i]]--;
         }
       }
 
-      document.getElementById('feedback').innerHTML += `<div>${resultHTML}</div>`;
-
-      if (guess === chosenWord) {
-        document.getElementById('feedback').innerHTML += `<p class="correct">🎉 You guessed it! The word was <strong>${chosenWord.toUpperCase()}</strong>.</p>`;
+      // Second pass: wrong position
+      for (let i = 0; i < 5; i++) {
+        if (status[i] !== "correct" && word.includes(guess[i]) && letterCount[guess[i]] > 0) {
+          status[i] = "wrong-place";
+          letterCount[guess[i]]--;
+        }
       }
 
-      document.getElementById('guessInput').value = '';
-    }
+      for (let i = 0; i < 5; i++) {
+        const box = document.createElement("div");
+        box.className = "letter-box " + status[i];
+        box.textContent = guess[i];
+        row.appendChild(box);
+      }
 
-    // Preload word list on page load
-    loadWords();
+      document.getElementById("game-area").appendChild(row);
+      input.value = "";
+
+      if (guess === word) {
+        setTimeout(() => alert("🎉 You guessed it right! The word was " + word + "!"), 100);
+      }
+    }
   </script>
+
 </body>
 </html>
