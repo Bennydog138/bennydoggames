@@ -2,92 +2,179 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bennydog Games</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto&display=swap" rel="stylesheet">
   <style>
-    body {
+    :root {
+      --bg: #0f172a;
+      --accent: #38bdf8;
+      --text: #f1f5f9;
+      --card-bg: #1e293b;
+    }
+
+    * {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #1e3c72, #2a5298);
-      color: #fff;
-      text-align: center;
-      padding: 2rem;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
 
     header {
-      animation: fadeIn 1s ease-out;
+      background: url('https://images.unsplash.com/photo-1581090700227-1b1cf89dd1d2?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
     }
 
-    h1 {
+    header::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.8);
+      z-index: 0;
+    }
+
+    header h1 {
+      font-family: 'Orbitron', sans-serif;
       font-size: 3rem;
-      margin-bottom: 0.5rem;
+      z-index: 1;
+      color: var(--accent);
     }
 
-    p {
+    header p {
       font-size: 1.2rem;
       max-width: 600px;
       margin: 1rem auto;
-      line-height: 1.6;
+      z-index: 1;
     }
 
     .btn {
-      margin-top: 2rem;
       padding: 1rem 2rem;
-      font-size: 1.2rem;
-      background: #ffc107;
-      color: #222;
+      font-size: 1.1rem;
+      background: var(--accent);
+      color: #000;
       border: none;
       border-radius: 10px;
       cursor: pointer;
+      z-index: 1;
       transition: 0.3s ease;
+      margin-top: 1rem;
     }
 
     .btn:hover {
-      background: #ffca28;
+      background: #7dd3fc;
+    }
+
+    section {
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .game-card {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .game-card:hover {
       transform: scale(1.05);
     }
 
-    .footer {
-      margin-top: 4rem;
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
-
-    .discord-link {
-      color: #00bfff;
-      text-decoration: none;
-      font-weight: bold;
-      transition: color 0.3s ease;
-    }
-
-    .discord-link:hover {
+    .discord-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #5865f2;
       color: #fff;
+      padding: 0.8rem 1.2rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      transition: background 0.3s;
+      z-index: 999;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .discord-float:hover {
+      background: #7289da;
+    }
+
+    footer {
+      padding: 2rem;
+      font-size: 0.9rem;
+      text-align: center;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+
+      header p {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- Hero Section -->
   <header>
-    <h1>🎮 Welcome to Bennydog Games</h1>
-    <p>We are a small indie game studio focused on fun, creative, and addictive browser games.
-    Whether you're here to play or just explore, you've come to the right place!</p>
-
-    <p>🗨️ Join our amazing community on <a class="discord-link" href="https://discord.gg/H9Mg8SKXyB" target="_blank">Discord</a> for updates, sneak peeks, and support.</p>
-
-    <button class="btn" onclick="window.location.href='numbergame.html'">
-      ▶️ Play the Number Game
-    </button>
+    <h1>Bennydog Games</h1>
+    <p>Innovating browser games with creativity, simplicity and fun. Dive into our growing collection!</p>
+    <button class="btn" onclick="window.location.href='numbergame.html'">🎮 Play Number Game</button>
   </header>
 
-  <div class="footer">
-    © Bennydog2021 <br />
-    Join our Discord: <a class="discord-link" href="https://discord.gg/H9Mg8SKXyB" target="_blank">https://discord.gg/H9Mg8SKXyB</a>
-  </div>
+  <!-- About -->
+  <section>
+    <h2>About Us</h2>
+    <p>Bennydog Games is an indie browser game studio passionate about building fun, addicting, and clever games for all ages. We focus on clean design, interactive gameplay, and community-driven development.</p>
+  </section>
+
+  <!-- Games Showcase -->
+  <section>
+    <h2>Our Games</h2>
+    <div class="games-grid">
+      <div class="game-card">
+        <h3>🎯 Number Game</h3>
+        <p>Test your logic and luck in this interactive number guessing challenge.</p>
+        <button class="btn" onclick="window.location.href='numbergame.html'">Play Now</button>
+      </div>
+      <!-- Add more game cards here in the future -->
+    </div>
+  </section>
+
+  <!-- Floating Discord Button -->
+  <a class="discord-float" href="https://discord.gg/H9Mg8SKXyB" target="_blank">💬 Join Discord</a>
+
+  <!-- Footer -->
+  <footer>
+    © Bennydog2021<br>
+    Join our Discord: <a href="https://discord.gg/H9Mg8SKXyB" target="_blank" style="color: #38bdf8;">https://discord.gg/H9Mg8SKXyB</a>
+  </footer>
 
 </body>
 </html>
