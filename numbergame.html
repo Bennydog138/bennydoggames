@@ -104,6 +104,10 @@
       color: #333;
     }
 
+    .button-group {
+      margin-top: 20px;
+    }
+
     footer {
       margin: 40px auto 20px;
       text-align: center;
@@ -134,6 +138,7 @@
     <h1>🎯 Guess the Number</h1>
     <button onclick="toggleRules()">📜 Rules</button>
     <button onclick="toggleStartPanel()">▶️ Play</button>
+    <button onclick="window.location.href='index.html'">🏠 Back to Home</button>
 
     <!-- Rules Section -->
     <div id="rulesBox" class="slideBox">
@@ -161,6 +166,9 @@
       <br>
       <button onclick="submitGuess()">Submit Guess</button>
       <div id="feedback"></div>
+      <div class="button-group">
+        <button onclick="playAgain()">🔁 Play Again</button>
+      </div>
     </div>
   </div>
 
@@ -209,7 +217,7 @@
       for (let i = 0; i < digitCount; i++) {
         randomNumber += Math.floor(Math.random() * 10).toString();
       }
-      console.log("DEBUG - Random Number:", randomNumber); // Hide in production
+      console.log("DEBUG - Random Number:", randomNumber);
     }
 
     function submitGuess() {
@@ -230,6 +238,16 @@
       } else {
         document.getElementById('feedback').innerText = `✅ ${correct} digit(s) in the correct position. Try again!`;
       }
+    }
+
+    function playAgain() {
+      document.getElementById('gameArea').classList.remove('show');
+      document.getElementById('startPanel').classList.add('show');
+      document.getElementById('feedback').innerText = '';
+      document.getElementById('guessInput').value = '';
+      document.getElementById('digitInput').value = '';
+      randomNumber = '';
+      digitCount = 0;
     }
   </script>
 </body>
