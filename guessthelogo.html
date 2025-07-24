@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Guess the Logo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ffecd2, #fcb69f);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 450px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    img.logo {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      width: 100%;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 30px;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background-color: #218838;
+    }
+
+    .popup {
+      position: fixed;
+      top: 20px;
+      right: -400px;
+      background-color: #333;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-size: 16px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: right 0.5s ease-in-out;
+      z-index: 1000;
+    }
+
+    .popup.show {
+      right: 20px;
+    }
+
+    .popup.success {
+      background-color: #28a745;
+    }
+
+    .popup.error {
+      background-color: #dc3545;
+    }
+
+    .button-group {
+      margin-top: 15px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    footer a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🧠 Guess the Logo</h1>
+    <img id="logoImage" class="logo" src="" alt="Logo to Guess">
+    <input type="text" id="logoGuess" placeholder="Enter brand name...">
+    <button onclick="submitLogoGuess()">Submit</button>
+    <div class="button-group">
+      <button onclick="nextLogo()">Next Logo</button>
+    </div>
+  </div>
+
+  <div id="popup" class="popup"></div>
+
+  <footer>
+    <p>©Bennydog2021 • Logo game edition</p>
+  </footer>
+
+  <script>
+    const logos = [
+      { img: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", answer: "amazon" },
+      { img: "https://upload.wikimedia.org/wikipedia/commons/4/44/McDonald%27s_logo.svg", answer: "mcdonalds" },
+      { img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Spotify_logo_horizontal_black.svg", answer: "spotify" },
+      { img: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg", answer: "google" },
+      { img: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg", answer: "apple" }
+    ];
+
+    let currentLogo = 0;
+
+    function showPopup(message, isSuccess) {
+      const popup = document.getElementById('popup');
+      popup.textContent = message;
+      popup.className = `popup show ${isSuccess ? 'success' : 'error'}`;
+      setTimeout(() => popup.classList.remove('show'), 2500);
+    }
+
+    function loadLogo() {
+      const logo = logos[currentLogo];
+      document.getElementById('logoImage').src = logo.img;
+      document.getElementById('logoGuess').value = '';
+    }
+
+    function submitLogoGuess() {
+      const userGuess = document.getElementById('logoGuess').value.trim().toLowerCase();
+      const correctAnswer = logos[currentLogo].answer;
+
+      if (userGuess === correctAnswer) {
+        showPopup("✅ Correct! That's " + correctAnswer.charAt(0).toUpperCase() + correctAnswer.slice(1), true);
+      } else {
+        showPopup("❌ Incorrect. Try again!", false);
+      }
+    }
+
+    function nextLogo() {
+      currentLogo = (currentLogo + 1) % logos.length;
+      loadLogo();
+    }
+
+    // Start with first logo
+    loadLogo();
+  </script>
+</body>
+</html>
