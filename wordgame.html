@@ -73,6 +73,7 @@
       color: #000;
       cursor: pointer;
       transition: all 0.3s ease;
+      margin-left: 5px;
     }
 
     button:hover {
@@ -103,6 +104,7 @@
   <div style="margin-top: 20px;">
     <input type="text" id="guess-input" maxlength="5" placeholder="Enter a word" />
     <button onclick="submitGuess()">Guess</button>
+    <button onclick="resetGame()">Play Again</button>
   </div>
 
   <div id="game-area"></div>
@@ -113,76 +115,86 @@
   </footer>
 
   <script>
-  let word = "";
-  const words = [];
+    let word = "";
+    let words = [];
 
-  // Load words from words.txt
-  fetch('words.txt')
-    .then(response => response.text())
-    .then(text => {
-      const lines = text.split('\n').map(w => w.trim().toUpperCase()).filter(w => w.length === 5);
-      words.push(...lines);
+    function loadWordsAndPick() {
+      return fetch('words.txt')
+        .then(response => response.text())
+        .then(text => {
+          words = text.split('\n').map(w => w.trim().toUpperCase()).filter(w => w.length === 5);
+          word = words[Math.floor(Math.random() * words.length)];
+          console.log("🔐 Secret word:", word);
+        })
+        .catch(err => {
+          console.error("Failed to load words.txt", err);
+          alert("Failed to load word list.");
+        });
+    }
+
+    // Initial load
+    loadWordsAndPick();
+
+    function submitGuess() {
+      const input = document.getElementById("guess-input");
+      const guess = input.value.toUpperCase();
+
+      if (!word) {
+        alert("Word list is still loading. Please wait a moment.");
+        return;
+      }
+
+      if (guess.length !== 5) {
+        alert("Please enter a 5-letter word.");
+        return;
+      }
+
+      const row = document.createElement("div");
+      row.className = "guess-row";
+
+      const letterCount = {};
+      for (const letter of word) {
+        letterCount[letter] = (letterCount[letter] || 0) + 1;
+      }
+
+      const status = Array(5).fill("wrong");
+
+      for (let i = 0; i < 5; i++) {
+        if (guess[i] === word[i]) {
+          status[i] = "correct";
+          letterCount[guess[i]]--;
+        }
+      }
+
+      for (let i = 0; i < 5; i++) {
+        if (status[i] !== "correct" && word.includes(guess[i]) && letterCount[guess[i]] > 0) {
+          status[i] = "wrong-place";
+          letterCount[guess[i]]--;
+        }
+      }
+
+      for (let i = 0; i < 5; i++) {
+        const box = document.createElement("div");
+        box.className = "letter-box " + status[i];
+        box.textContent = guess[i];
+        row.appendChild(box);
+      }
+
+      document.getElementById("game-area").appendChild(row);
+      input.value = "";
+
+      if (guess === word) {
+        setTimeout(() => alert("🎉 You guessed it right! The word was " + word + "!"), 100);
+      }
+    }
+
+    function resetGame() {
+      document.getElementById("game-area").innerHTML = "";
+      document.getElementById("guess-input").value = "";
       word = words[Math.floor(Math.random() * words.length)];
-      console.log("🔐 Secret word:", word); // For testing
-    })
-    .catch(err => {
-      console.error("Failed to load words.txt", err);
-      alert("Failed to load word list.");
-    });
-
-  function submitGuess() {
-    const input = document.getElementById("guess-input");
-    const guess = input.value.toUpperCase();
-
-    if (!word) {
-      alert("Word list is still loading. Please wait a moment.");
-      return;
+      console.log("🔄 New secret word:", word);
     }
-
-    if (guess.length !== 5) {
-      alert("Please enter a 5-letter word.");
-      return;
-    }
-
-    const row = document.createElement("div");
-    row.className = "guess-row";
-
-    const letterCount = {};
-    for (const letter of word) {
-      letterCount[letter] = (letterCount[letter] || 0) + 1;
-    }
-
-    const status = Array(5).fill("wrong");
-
-    for (let i = 0; i < 5; i++) {
-      if (guess[i] === word[i]) {
-        status[i] = "correct";
-        letterCount[guess[i]]--;
-      }
-    }
-
-    for (let i = 0; i < 5; i++) {
-      if (status[i] !== "correct" && word.includes(guess[i]) && letterCount[guess[i]] > 0) {
-        status[i] = "wrong-place";
-        letterCount[guess[i]]--;
-      }
-    }
-
-    for (let i = 0; i < 5; i++) {
-      const box = document.createElement("div");
-      box.className = "letter-box " + status[i];
-      box.textContent = guess[i];
-      row.appendChild(box);
-    }
-
-    document.getElementById("game-area").appendChild(row);
-    input.value = "";
-
-    if (guess === word) {
-      setTimeout(() => alert("🎉 You guessed it right! The word was " + word + "!"), 100);
-    }
-  }
-</script>
+  </script>
 
 </body>
 </html>
