@@ -15,7 +15,7 @@
 
     h1 {
       font-size: 2.5rem;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     #game-area {
@@ -42,15 +42,15 @@
     }
 
     .correct {
-      background-color: #4caf50; /* Green */
+      background-color: #4caf50;
     }
 
     .wrong-place {
-      background-color: #ff9800; /* Orange */
+      background-color: #ff9800;
     }
 
     .wrong {
-      background-color: #444; /* Grey */
+      background-color: #444;
     }
 
     input[type="text"] {
@@ -73,7 +73,7 @@
       color: #000;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-left: 5px;
+      margin: 5px;
     }
 
     button:hover {
@@ -94,6 +94,12 @@
 <body>
 
   <h1>🔤 Word Guess Game</h1>
+
+  <!-- Back to Home button -->
+  <div style="margin-bottom: 20px;">
+    <button onclick="window.location.href='index.html'">⬅ Back to Home</button>
+  </div>
+
   <p>Guess the hidden 5-letter word. After each guess, you'll get feedback:</p>
   <ul style="text-align: left; max-width: 500px; margin: 0 auto;">
     <li>🟩 Green = correct letter & position</li>
